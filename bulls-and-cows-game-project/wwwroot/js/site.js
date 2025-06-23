@@ -33,17 +33,25 @@
     function restartGame() {
         window.location.reload();
     }
-    
-    function makeGuess(number, button) {
-        button.disabled = true;
-    
-        fetch("/guess", {
+    /*
+    function makeGuess(guess) {
+        fetch("/Game/MakeGuess", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ number })
+            body: JSON.stringify({ guess: guess })  
         })
-        .then(response => response.json())
-        .then(updateGameState);
+            .then(response => response.json())
+            .then(data => updateGameState(data));
+    }*/
+
+    function makeGuess(guess) {
+        fetch("/api/guess", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(guess) 
+        })
+            .then(response => response.json())
+            .then(data => updateGameState(data));
     }
 
     function lastFilledIndex(array) {
@@ -82,26 +90,34 @@
             button.disabled = true;
             secretCodeDisplay.innerText = hidden_code_array.join(" ");
             if (index == 3) {
-                //volani makeGuess(hidden_code_array.join(""), button);
+                makeGuess(hidden_code_array.join(""));
             }
         }
 
     }
 
-    
-    function updateGameState(data) {
-      
-    
-        secretCodeDisplay.innerText = hidden_code;
+    function resetInput() {
+        hidden_code_array = ["_", "_", "_", "_"];
+        secretCodeDisplay.innerText = hidden_code_array.join(" ");
 
-    
-        if (status === "won") {
-            endGame("VÝHRA\nSlovo bylo: " + word, "green");
-        } else if (status === "lost") {
-            secretCodeDisplay.innerText = word.split("").join(" "); 
-            endGame("PROHRA\nSlovo bylo: " + word, "red");
+        const buttons = numbersDiv.getElementsByTagName("button");
+        for (let btn of buttons) {
+            if (btn.innerText !== "⌫") {
+                btn.disabled = false;
+            }
         }
     }
+
+    
+    function updateGameState(data) {
+        alert(`${data.bulls} bulls, ${data.cows} cows`);
+        resetInput()
+        if (data.isOver) {
+            document.getElementById("gameMessage").innerText = data.win ? "You won!" : "Game Over!";
+            document.getElementById("gameOverModal").style.display = "block";
+        }
+    }
+
     
     function endGame(message, color) {
         secretCodeDisplay.style.color = color;

@@ -25,6 +25,7 @@ builder.Services.AddDefaultIdentity<Player>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddRazorPages();
+builder.Services.AddControllers();
 
 
 var app = builder.Build();
@@ -50,6 +51,8 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.MapControllers();
 app.MapRazorPages();
+
 
 app.Run();
