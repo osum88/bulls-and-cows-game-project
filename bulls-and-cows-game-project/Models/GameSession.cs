@@ -12,7 +12,6 @@
         public string TargetCode { get; set; }
         public bool IsSolved { get; set; }
         public int TotalGuesses { get; set; }
-
         public ICollection<Guess> Guesses { get; set; }
         public ICollection<GameSessionTag> GameSessionTags { get; set; }
     }

@@ -7,7 +7,6 @@ namespace bulls_and_cows_game_project.Models
 {
     public class Player : IdentityUser
     {
-
         public ICollection<GameSession> GameSessions { get; set; }
     }
 }

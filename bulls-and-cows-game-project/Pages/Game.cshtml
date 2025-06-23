@@ -1,0 +1,18 @@
+﻿@page
+@model bulls_and_cows_game_project.Pages.GameModel
+@{
+	ViewData["Title"] = "Game";
+}
+
+<body>
+    <h1>Bulls and Cows</h1>
+    <p id="secret-code">_ _ _ _</p>
+    
+    <div id="gameOverModal" style="display: none;">
+        <div class="modal-content">
+            <p id="gameMessage"></p>
+            <button id="restartButton">Hrát znovu</button>
+        </div>
+    </div>      
+    <div id="numbers"></div>
+</body>
