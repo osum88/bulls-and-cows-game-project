@@ -2,19 +2,7 @@
 {
     public class CodeEvaluator
     {
-        public static string GenerateSecretCode(int length = 4)
-        {
-            var rnd = new Random();
-            var digits = "0123456789".ToCharArray();
 
-            for (int i = digits.Length - 1; i > 0; i--)
-            {
-                int j = rnd.Next(i + 1);
-                (digits[i], digits[j]) = (digits[j], digits[i]);
-            }
-
-            return new string(digits, 0, length);
-        }
 
         public static (int bulls, int cows) EvaluateGuess(string secret, string guess)
         {

@@ -6,14 +6,15 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                       ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<Player>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = false; ;
+    options.SignIn.RequireConfirmedAccount = false;
 
     options.Password.RequireDigit = false;
     options.Password.RequireLowercase = false;
@@ -24,8 +25,23 @@ builder.Services.AddDefaultIdentity<Player>(options =>
 })
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddRazorPages();
-builder.Services.AddControllers();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login";
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+});
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);  
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;  
+});
+
+builder.Services.AddControllersWithViews()
+    .AddRazorRuntimeCompilation();
+builder.Services.AddRazorPages()
+    .AddRazorRuntimeCompilation();
 
 
 var app = builder.Build();
@@ -38,7 +54,6 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Error");
-   
     app.UseHsts();
 }
 
@@ -49,10 +64,12 @@ app.UseRouting();
 
 app.UseAuthentication();
 
+
+app.UseSession();
+
 app.UseAuthorization();
 
 app.MapControllers();
 app.MapRazorPages();
-
 
 app.Run();

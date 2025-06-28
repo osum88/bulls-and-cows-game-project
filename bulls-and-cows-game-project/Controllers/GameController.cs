@@ -1,22 +1,41 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using bulls_and_cows_game_project.Services;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.CodeDom.Compiler;
+using bulls_and_cows_game_project.Services;/*
 
 namespace bulls_and_cows_game_project.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
     [Authorize]
-    public class GuessController : ControllerBase
+    [Route("/Game")]
+    public class GameController : Controller
     {
-        [HttpPost]
-        public IActionResult MakeGuess([FromBody] string guess)
+        [HttpGet]
+        public IActionResult Game(string difficulty)
         {
             
-            var result = CodeEvaluator.EvaluateGuess("1234", guess);
 
-            return Ok(new { bulls = result.bulls, cows = result.cows });
+            if (string.IsNullOrEmpty(difficulty) || !new[] { "easy", "normal", "hard" }.Contains(difficulty.ToLower()))
+            {
+                return BadRequest("Invalid difficulty.");
+            }
 
+
+            HttpContext.Session.SetString("Difficulty", difficulty);
+
+
+            string secretCode = CodeEvaluator.GenerateSecretCode(); ;
+            HttpContext.Session.SetString("SecretCode", secretCode);
+            HttpContext.Session.SetInt32("RemainingAttempts", difficulty == "hard" ? 5 : (difficulty == "normal" ? 15 : int.MaxValue));
+            
+
+
+            return View("Game");
+
+
+
+            //  return Redirect($"/Game?difficulty={difficulty}");
         }
     }
-}
+
+}*/

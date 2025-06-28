@@ -18,31 +18,7 @@
     });
 
  
-    function showModal(message, color) {
-        const modal = document.getElementById("gameOverModal");
-        const gameMessage = document.getElementById("gameMessage");
-        
-        gameMessage.innerText = message;
-        gameMessage.style.color = color;
-        modal.style.display = "flex";  
 
-        const restartButton = document.getElementById("restartButton");
-        restartButton.onclick = restartGame;  
-    }
-
-    function restartGame() {
-        window.location.reload();
-    }
-    /*
-    function makeGuess(guess) {
-        fetch("/Game/MakeGuess", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ guess: guess })  
-        })
-            .then(response => response.json())
-            .then(data => updateGameState(data));
-    }*/
 
     function makeGuess(guess) {
         fetch("/api/guess", {
@@ -111,16 +87,22 @@
     
     function updateGameState(data) {
         alert(`${data.bulls} bulls, ${data.cows} cows`);
-        resetInput()
-        if (data.isOver) {
-            document.getElementById("gameMessage").innerText = data.win ? "You won!" : "Game Over!";
-            document.getElementById("gameOverModal").style.display = "block";
+        resetInput();
+        if (data.isEndGame) {
+            let message = data.resultGame ? "You won!" : "You lost!";
+            document.getElementById("finalAttempts").innerText = data.attempts;
+            document.getElementById("revealedCode").innerText = data.secretCode;
+            document.getElementById("gameMessage").innerText = message;
+            document.getElementById("time").innerText = data.resultTime;
+            document.getElementById("gameOverModal").style.display = "flex";
         }
     }
 
+    function restartGame() {
+        window.location.reload();
+    }
     
     function endGame(message, color) {
-        secretCodeDisplay.style.color = color;
         showModal(message, color);
     }
 };
