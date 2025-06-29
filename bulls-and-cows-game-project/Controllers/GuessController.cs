@@ -57,7 +57,6 @@ namespace bulls_and_cows_game_project.Controllers
             }
 
 
-            // --- 5. Vyhodnocení tipu ---
             var result = CodeEvaluator.EvaluateGuess(secretCode, guess);
             var isSolved = result.bulls == 4; 
 
