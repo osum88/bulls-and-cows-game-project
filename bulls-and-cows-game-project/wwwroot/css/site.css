@@ -59,12 +59,66 @@ body {
     width: 90%;
 }
 
+
 .game-info {
     display: flex;
     justify-content: space-between;
     margin: 1em 2.5em 2em 2.5em;
 }
 
+
 #gameMessage {
     font-size: 24px;
 }
+
+.difficulty {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: larger;
+}
+
+.attempts-box {
+    background: black;
+    min-width: 8em;
+    padding: 0.5em 1em;
+    border-radius: 10px;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: white;
+    display: inline-block;
+}
+
+.infinity-font {
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.table-game {
+    border: solid black 2px;
+    table-layout: fixed;
+    width: 70%;
+}
+
+.table-header {
+    color: white;
+    background-color: black;
+    padding: 1em 0;
+    text-transform: uppercase;
+}
+
+.table-header-cell {
+    padding: 0.2em 0.7em;
+}
+
+#tableBody tr {
+    height: 30px;
+}
+
+.table-bordered,
+.table-bordered th,
+.table-bordered td {
+    border-width: 2px !important;
+    border-style: solid !important;
+    border-color: black;
+}
+
+

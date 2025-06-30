@@ -30,6 +30,8 @@ namespace bulls_and_cows_game_project.Pages
         public int CurrentGameSessionId { get; set; }
         public string CurrentGameSecretCode { get; set; }
 
+        public GameSession CurrentGameSession { get; set; }
+
 
         public async Task OnGetAsync()
         {
@@ -94,7 +96,8 @@ namespace bulls_and_cows_game_project.Pages
             });
 
             _context.GameSessions.Add(newGameSession);
-            await _context.SaveChangesAsync(); 
+            await _context.SaveChangesAsync();
+
 
             HttpContext.Session.SetInt32("CurrentGameSessionId", newGameSession.Id);
             HttpContext.Session.SetString("CurrentGameSecretCode", secretCode);
@@ -117,7 +120,7 @@ namespace bulls_and_cows_game_project.Pages
                 await _context.SaveChangesAsync();
             }
         }
-        //test
+
         public static string GenerateSecretCode()
         {
             var rnd = new Random();

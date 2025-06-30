@@ -1,13 +1,50 @@
 ﻿@page
 @model bulls_and_cows_game_project.Pages.GameModel
 @{
-	ViewData["Title"] = "Game";
+    ViewData["Title"] = "Game";
 }
 
 <body>
-    <h1>Bulls and Cows</h1>
-    <p id="secret-code">_ _ _ _</p>
+    <div class="container text-center">
+        <h1>Bulls and Cows</h1>
+        <div class="row mb-2">
+            <div class="col-4 text-center d-flex flex-column align-items-center ">
+                <div class="attempts-box mb-3 @GetDifficultyBadgeClass(Model.Difficulty)">
+                    <span class="difficulty">@Model.Difficulty</span>  <br />
+                    <div id="actualAttempts-box">
+                        <span id="actualAttempts">0</span> /
+                        @if (Model.Difficulty?.ToLower() == "easy")
+                        {
+                            <span class="infinity-font">&infin;</span>
+                        }
+                        else
+                        {
+                            @Model.MaxAttempts
+                        }
+                    </div>
+                </div>
+                <button id="endGameButton" class="btn btn-outline-danger">End Game</button>
+            </div>
+            <div class="col-4">
+                <p id="secret-code">_ _ _ _</p>
+            </div>
+            <div class="col-4 text-center d-flex justify-content-end ">
+                <table class="table-game table-bordered">
+                    <thead class="table-header">
+                        <tr>
+                            <th class="table-header-cell">Code</th>
+                            <th class="table-header-cell">Bulls</th>
+                            <th class="table-header-cell">Cows</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" class="">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
+    <div id="numbers" class="d-flex justify-content-center mt-2"></div>
     <div id="gameOverModal" style="display: none;">
         <div class="modal-content">
             <p id="gameMessage">You won!</p>
@@ -17,11 +54,11 @@
                     <span id="finalAttempts">0</span>
                 </div>
                 <div>
-                    <span>Time:  </span>
+                    <span>Time: </span>
                     <span id="time">00:00</span>
                 </div>
                 <div>
-                    <span>Secret code:  </span>
+                    <span>Secret code: </span>
                     <span id="revealedCode">????</span>
                 </div>
             </div>
@@ -58,5 +95,21 @@
             </form>
         </div>
     </div>
-    <div id="numbers"></div>
 </body>
+
+@functions {
+    public string GetDifficultyBadgeClass(string difficulty)
+    {
+        switch (difficulty?.ToLower())
+        {
+            case "easy":
+                return "bg-primary";
+            case "normal":
+                return "bg-warning";
+            case "hard":
+                return "bg-danger";
+            default:
+                return "bg-secondary";
+        }
+    }
+}

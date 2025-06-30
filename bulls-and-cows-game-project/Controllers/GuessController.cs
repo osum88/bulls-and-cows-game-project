@@ -46,17 +46,6 @@ namespace bulls_and_cows_game_project.Controllers
                 return BadRequest("Invalid guess format. Please enter 4 unique digits.");
             }
 
-            // kontrola jestli hra neni jiz vyresena nebo je prekrocen limit pokusu
-            if (currentSession.IsSolved)
-            {
-                return Ok(new { error = "Game is already solved.", isSolved = true, secretCode = secretCode });
-            }
-            if (maxAttempts != int.MaxValue && currentSession.TotalGuesses >= maxAttempts)
-            {
-                return Ok(new { error = "Maximum attempts reached.", isSolved = false, resultGame = false, secretCode = secretCode });
-            }
-
-
             var result = CodeEvaluator.EvaluateGuess(secretCode, guess);
             var isSolved = result.bulls == 4; 
 
@@ -93,16 +82,59 @@ namespace bulls_and_cows_game_project.Controllers
             }
 
             await _context.SaveChangesAsync();
-            
+
             return Ok(new
             {
                 bulls = result.bulls,
                 cows = result.cows,
-                isEndGame = isSolved || (currentSession.TotalGuesses >= maxAttempts), 
-                resultGame = resultGame, 
-                attempts = currentSession.TotalGuesses, 
+                isEndGame = isSolved || (currentSession.TotalGuesses >= maxAttempts),
+                resultGame = resultGame,
+                attempts = currentSession.TotalGuesses,
                 resultTime = formattedResultTime,
-                secretCode = isSolved || (gameOver && !isSolved) ? secretCode : null 
+                secretCode = isSolved || (gameOver && !isSolved) ? secretCode : null
+            });
+        }
+
+        [HttpPost("EndGame")] 
+        public async Task<IActionResult> EndGame()
+        {
+            int? gameSessionId = HttpContext.Session.GetInt32("CurrentGameSessionId");
+
+            if (!gameSessionId.HasValue)
+            {
+                return BadRequest("No active game session to end.");
+            }
+
+            var currentSession = await _context.GameSessions.FindAsync(gameSessionId.Value);
+
+            if (currentSession == null)
+            {
+                return NotFound("Game session not found in database.");
+            }
+
+            currentSession.IsSolved = false; 
+
+            string secretCode = HttpContext.Session.GetString("CurrentGameSecretCode");
+
+            currentSession.EndTime = DateTime.UtcNow;
+            TimeSpan resultTime = currentSession.EndTime - currentSession.StartTime;
+            string formattedResultTime = resultTime.ToString(@"hh\:mm\:ss");
+
+            await _context.SaveChangesAsync();
+
+            HttpContext.Session.Remove("CurrentGameSessionId");
+            HttpContext.Session.Remove("CurrentGameSecretCode");
+            HttpContext.Session.Remove("MaxAttempts");
+
+            return Ok(new
+            {
+                bulls = 0, 
+                cows = 0, 
+                isEndGame = true, 
+                resultGame = false, 
+                attempts = currentSession.TotalGuesses,
+                resultTime = formattedResultTime,
+                secretCode = secretCode 
             });
         }
     }
