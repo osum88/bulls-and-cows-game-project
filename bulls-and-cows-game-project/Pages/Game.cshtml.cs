@@ -117,7 +117,7 @@ namespace bulls_and_cows_game_project.Pages
                 await _context.SaveChangesAsync();
             }
         }
-
+        //test
         public static string GenerateSecretCode()
         {
             var rnd = new Random();
