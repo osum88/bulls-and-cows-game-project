@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Http;
 using bulls_and_cows_game_project.Data; 
 using bulls_and_cows_game_project.Models; 
 using System.Linq; 
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
+using System.Runtime.Serialization;
+
 
 namespace bulls_and_cows_game_project.Controllers
 {
@@ -38,12 +40,6 @@ namespace bulls_and_cows_game_project.Controllers
             if (currentSession == null)
             {
                 return NotFound("Game session not found in database.");
-            }
-
-            // validace tipu
-            if (string.IsNullOrEmpty(guess) || guess.Length != 4 || !guess.All(char.IsDigit) || guess.Distinct().Count() != 4)
-            {
-                return BadRequest("Invalid guess format. Please enter 4 unique digits.");
             }
 
             var result = CodeEvaluator.EvaluateGuess(secretCode, guess);

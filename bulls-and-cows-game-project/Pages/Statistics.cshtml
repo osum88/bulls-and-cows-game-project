@@ -1,0 +1,93 @@
+﻿@page
+@model bulls_and_cows_game_project.Pages.StatisticsModel
+@{
+    ViewData["Title"] = "Statistics";
+}
+
+<body>
+    @section Scripts {
+        <script src="~/js/statistics.js" asp-append-version="true"></script>
+    }
+    <form id="filterForm" class="mb-4">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-2">
+                <select id="filterYear" name="year" class="form-select">
+                    <option value="" selected disabled hidden>Year</option>
+                    <option value="all">All</option>
+                    @foreach (var year in Model.AvailableYears)
+                    {
+                        <option value="@year">@year</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select id="filterMonth" name="month" class="form-select">
+                    <option value="" selected disabled hidden>Month</option>
+                    <option value="all">All</option>
+                    <option value="1">January</option>
+                    <option value="2">February</option>
+                    <option value="3">March</option>
+                    <option value="4">April</option>
+                    <option value="5">May</option>
+                    <option value="6">June</option>
+                    <option value="7">July</option>
+                    <option value="8">August</option>
+                    <option value="9">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select id="filterDay" name="day" class="form-select">
+                    <option value="" selected disabled hidden>Day</option>
+                    <option value="all">All</option>
+                    @for (int i = 1; i <= 31; i++)
+                    {
+                        <option value="@i">@i</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select id="filterStatus" name="status" class="form-select">
+                    <option value="" selected disabled hidden>Status</option>
+                    <option value="all">All</option>
+                    <option value="won">Won</option>
+                    <option value="lost">Lost</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select id="filterDifficulty" name="difficulty" class="form-select">
+                    <option value="" selected disabled hidden>Difficulty</option>
+                    <option value="all">All</option>
+                    <option value="easy">Easy</option>
+                    <option value="normal">Normal</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex"> 
+                <button type="submit" class="btn btn-primary flex-grow-1 me-2">Filter</button> 
+                <button type="button" id="downloadStatisticsButton" class="btn btn-success flex-grow-1">Download</button> 
+            </div>
+        </div>
+    </form>
+
+    <div id="statisticsTableContainer">
+        <table class="table table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col" class="sortable-header cursor-pointer" data-sort-by="startTime">Date</th>
+                    <th scope="col" class="sortable-header cursor-pointer" data-sort-by="startTime">Time</th>
+                    <th scope="col" class="sortable-header cursor-pointer" data-sort-by="duration">Duration</th>
+                    <th scope="col" class="sortable-header cursor-pointer" data-sort-by="isSolved">Status</th>
+                    <th scope="col" class="sortable-header cursor-pointer" data-sort-by="targetCode">Secret Code</th>
+                    <th scope="col" class="sortable-header cursor-pointer" data-sort-by="totalGuesses">Attempts</th>
+                    <th scope="col" class="sortable-header cursor-pointer" data-sort-by="difficulty">Difficulty</th>
+                </tr>
+            </thead>
+            <tbody id="statisticsTableBody">
+            </tbody>
+        </table>
+    </div>
+</body>

@@ -30,15 +30,14 @@
         guessesTableBody.append(newRow); 
     }
 
-
     function makeGuess(guess) {
         fetch("/api/guess", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(guess) 
         })
-            .then(response => response.json())
-            .then(data => updateGameState(data, guess));
+        .then(response => response.json())
+        .then(data => updateGameState(data, guess));
     }
     $('#endGameButton').on('click', function () {
         if (confirm('Do you want to end the game?')) {
@@ -46,11 +45,10 @@
                 method: 'POST',
                 headers: { "Content-Type": "application/json" }
             })
-                .then(response => response.json())
-                .then(data => updateGameState(data, ""));
+            .then(response => response.json())
+            .then(data => updateGameState(data, ""));
         }
     });
-
 
     function lastFilledIndex(array) {
         for (let i = array.length - 1; i >= 0; i--) {
@@ -78,7 +76,6 @@
         }
     }
 
-
     function addNumber(number, button) {
         
         const index = hidden_code_array.indexOf("_");
@@ -90,7 +87,6 @@
                 makeGuess(hidden_code_array.join(""));
             }
         }
-
     }
 
     function resetInput() {
@@ -133,8 +129,8 @@
         `;
 
         if (data.attempts <= 10) {
-                  tableBody.insertBefore(newRow, tableBody.rows[data.attempts - 1]);
-                tableBody.deleteRow(tableBody.rows.length - 1);
+            tableBody.insertBefore(newRow, tableBody.rows[data.attempts - 1]);
+            tableBody.deleteRow(tableBody.rows.length - 1);
         }
         else
         {
