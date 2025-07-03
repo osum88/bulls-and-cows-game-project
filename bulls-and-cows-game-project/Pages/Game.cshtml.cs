@@ -14,8 +14,8 @@ namespace bulls_and_cows_game_project.Pages
     [Authorize]
     public class GameModel : PageModel
     {
-        private readonly ApplicationDbContext _context;
-        private readonly UserManager<Player> _userManager;
+        private readonly ApplicationDbContext _context;         // instance databazoveho kontx. pro pristup k datum
+        private readonly UserManager<Player> _userManager;  // instance pro spravu uzivatelu
 
         public GameModel(ApplicationDbContext context, UserManager<Player> userManager)
         {
@@ -23,15 +23,10 @@ namespace bulls_and_cows_game_project.Pages
             _userManager = userManager;
         }
 
+        // vaze hodnotu z query stringu URL
         [BindProperty(SupportsGet = true)]
         public string Difficulty { get; set; }
         public int MaxAttempts { get; set; }
-
-        public int CurrentGameSessionId { get; set; }
-        public string CurrentGameSecretCode { get; set; }
-
-        public GameSession CurrentGameSession { get; set; }
-
 
         public async Task OnGetAsync()
         {
@@ -42,7 +37,7 @@ namespace bulls_and_cows_game_project.Pages
                 return;
             }
 
-            await CleanUpIncompleteGameSessions();
+            await CleanUpIncompleteGameSessions();  //vycisti nedokoncene herni relace
 
 
             string difficultyTagName = ""; 
@@ -101,10 +96,7 @@ namespace bulls_and_cows_game_project.Pages
 
             HttpContext.Session.SetInt32("CurrentGameSessionId", newGameSession.Id);
             HttpContext.Session.SetString("CurrentGameSecretCode", secretCode);
-            HttpContext.Session.SetInt32("CurrentGameGuessesMade", 0);
 
-            CurrentGameSessionId = newGameSession.Id;
-            CurrentGameSecretCode = secretCode;
         }
 
         private async Task CleanUpIncompleteGameSessions()

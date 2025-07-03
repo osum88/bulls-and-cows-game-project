@@ -1,5 +1,6 @@
 ﻿using Azure;
 using bulls_and_cows_game_project.Models;
+using Humanizer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -22,13 +23,13 @@ namespace bulls_and_cows_game_project.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<GameSessionTag>()
-                .HasKey(gst => new { gst.GameSessionId, gst.TagId });
+            builder.Entity<GameSessionTag>()                            //konfigurace vztahu M:N mezi GameSession a Tag pomocí GameSessionTag
+                .HasKey(gst => new { gst.GameSessionId, gst.TagId });   // slozeny primarni klic (GameSessionId a TagId)
 
-            builder.Entity<GameSession>()
-                .HasOne(gs => gs.Player)
-                .WithMany(u => u.GameSessions)
-                .HasForeignKey(gs => gs.PlayerId);
+            builder.Entity<GameSession>()                               // konfigurace vztahu 1:M mezi Player a GameSession                           
+                .HasOne(gs => gs.Player)                                // GameSession ma jeden Player
+                .WithMany(u => u.GameSessions)                          // a ma mnoho GameSessions.
+                .HasForeignKey(gs => gs.PlayerId);                      // cizi klic v tabulce GameSession, ktery odkazuje na ID Player
         }
     }
 }

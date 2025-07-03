@@ -35,7 +35,7 @@ namespace bulls_and_cows_game_project.Controllers
             [FromQuery] string sortDir = "desc",
             [FromQuery] bool download = false)     
         {
-
+            // ziska ID uživatele z jeho claims
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             IQueryable<GameSession> query = _context.GameSessions
@@ -124,9 +124,10 @@ namespace bulls_and_cows_game_project.Controllers
                     query = query.OrderByDescending(gs => gs.StartTime);
                     break;
             }
-
+            // dotaz na databazi a výsledky do seznamu objektů GameSession
             var games = await query.ToListAsync();
 
+            // entity GameSession do DTO 
             var gameStatistics = games.Select(gs => new GameStatistics
             {
                 Id = gs.Id,
@@ -149,17 +150,21 @@ namespace bulls_and_cows_game_project.Controllers
 
             if (download)
             {
-                MemoryStream memoryStream = new MemoryStream();
+                // vytvori MemoryStream pro zápis XML.
+                MemoryStream memoryStream = new MemoryStream();  
                 try
                 {
                     using (TextWriter tw = new StreamWriter(memoryStream, System.Text.Encoding.UTF8, 1024, true))
                     {
+                        // inicializuje XmlSerializer pro seznam objektů GameStatistics
                         XmlSerializer serializer = new XmlSerializer(typeof(List<GameStatistics>));
+                        // serializuje seznam gameStatistics do TextWriteru
                         serializer.Serialize(tw, gameStatistics);
                     }
 
                     memoryStream.Position = 0;
 
+                    // vrati XML soubor jako HTTP odpověď
                     return File(memoryStream, "application/xml", "statistics.xml");
                 }
                 catch (Exception ex)

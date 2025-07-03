@@ -26,12 +26,13 @@ namespace bulls_and_cows_game_project.Controllers
         [HttpPost]
         public async Task<IActionResult> MakeGuess([FromBody] string guess)
         {
+            //nacte data z HttpContext.Session
             int? gameSessionId = HttpContext.Session.GetInt32("CurrentGameSessionId");
-            string secretCode = HttpContext.Session.GetString("CurrentGameSecretCode");
+            string? secretCode = HttpContext.Session.GetString("CurrentGameSecretCode");
             int? maxAttempts = HttpContext.Session.GetInt32("MaxAttempts");
 
             if (!gameSessionId.HasValue || string.IsNullOrEmpty(secretCode) || !maxAttempts.HasValue)
-            {
+            { 
                 return BadRequest("Game session data not found. Please start a new game.");
             }
 
@@ -59,8 +60,8 @@ namespace bulls_and_cows_game_project.Controllers
 
 
             currentSession.TotalGuesses++;
-            currentSession.IsSolved = isSolved;
-            bool resultGame = false;
+            currentSession.IsSolved = isSolved;    
+            bool resultGame = false;        //vyhra(true)/prohra(false)
             bool gameOver = (maxAttempts != int.MaxValue && currentSession.TotalGuesses >= maxAttempts);
             string formattedResultTime = "00:00:00";
 
@@ -74,11 +75,16 @@ namespace bulls_and_cows_game_project.Controllers
                 {
                     resultGame = true;
                 }
-                
+
+                HttpContext.Session.Remove("CurrentGameSessionId");
+                HttpContext.Session.Remove("CurrentGameSecretCode");
+                HttpContext.Session.Remove("MaxAttempts");
+
             }
 
             await _context.SaveChangesAsync();
 
+            //vracení HTTP OK odpovedi s JSON objektem obsahujicim stav hry a vysledky odhadu
             return Ok(new
             {
                 bulls = result.bulls,
@@ -110,7 +116,8 @@ namespace bulls_and_cows_game_project.Controllers
 
             currentSession.IsSolved = false; 
 
-            string secretCode = HttpContext.Session.GetString("CurrentGameSecretCode");
+            string? secretCode = HttpContext.Session.GetString("CurrentGameSecretCode");
+
 
             currentSession.EndTime = DateTime.UtcNow;
             TimeSpan resultTime = currentSession.EndTime - currentSession.StartTime;
