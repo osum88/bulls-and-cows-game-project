@@ -18,9 +18,9 @@ Tato webová aplikace implementuje klasickou logickou hru "Bulls and Cows", kde 
 ## Hraní hry:
 1. Zvolte si obtížnost.
 
-2. Zadejte svůj odhad kódu do vstupního pole.
+2. Zadejte svůj odhad.
 
-3. Stiskněte tlačítko pro odeslání odhadu.
+3. Po vybrání čtvrtého čísla se odhad sám potvrdí.
 
 4. Zobrazí se vám nápověda v tabulce (Bulls & Cows).
 
